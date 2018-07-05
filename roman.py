@@ -3,7 +3,9 @@
 expansions = {
     'IV': 'IIII',
     'IX': 'VIIII',
+    'X': 'VV',
 }
+
 
 
 class Number:
@@ -14,7 +16,13 @@ class Number:
         return Number(self._value + y._value)
 
     def __repr__(self):
-        return f"Number('{self._value}')"
+        previous = None
+        number = self._value
+        while previous != number:
+            previous = number
+            for new, old in expansions.items():
+                number = number.replace(old, new, 1)
+        return f"Number('{number}')"
 
     def __eq__(self, y):
         return self._value == y._value
@@ -49,3 +57,7 @@ def test_another_add():
 def test_nice_repr():
     num = Number('IIII')
     assert repr(num) == "Number('IV')"
+
+def test_vs():
+    result = Number('VV') + Number('VVV')
+    assert result == Number('XXV')
